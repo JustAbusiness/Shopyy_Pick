@@ -13,8 +13,10 @@ interface AclGuardProps {
 
 const AclGuard = (props: AclGuardProps) => {
   // ** Props
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   const { aclAbilities, children, guestGuard = false, authGuard = true } = props
-  return <>{children}</>
+  
+return <>{children}</>
 }
 
 export default AclGuard

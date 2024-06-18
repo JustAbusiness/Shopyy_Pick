@@ -5,6 +5,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 
 const FallbackSpinner = ({ sx }: { sx?: BoxProps['sx'] }) => {
   // ** Hook
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   const theme = useTheme()
 
   return (

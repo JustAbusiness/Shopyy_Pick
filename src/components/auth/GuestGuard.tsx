@@ -7,6 +7,7 @@ interface GuestGuardProps {
 }
 
 const GuestGuard = (props: GuestGuardProps) => {
+    /* eslint-disable @typescript-eslint/no-unused-vars */
   const { children, fallback } = props
 
   return <>{children}</>

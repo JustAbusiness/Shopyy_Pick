@@ -1,18 +1,7 @@
 'use client'
-import axios from 'axios'
 import Head from 'next/head'
-import { useEffect } from 'react';
 
 export default function Home() {
-  const fecthApiUser = async () => {
-    await axios.get('http://localhost:3100/api/users').then((res) => { 
-      console.log("res")
-    });
-  }
-
-  useEffect(() => {
-    fecthApiUser();
-  }, [])
   return (
     <>
       <Head>

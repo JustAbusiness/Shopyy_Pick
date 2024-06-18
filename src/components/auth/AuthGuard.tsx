@@ -7,6 +7,7 @@ interface AuthGuardProps {
 }
 
 const AuthGuard = (props: AuthGuardProps) => {
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   const { children, fallback } = props
 
   return <>{children}</>
