@@ -1,8 +1,15 @@
 'use client'
+import { Typography, useTheme } from '@mui/material'
 import Head from 'next/head'
+import { useSettings } from 'src/hooks/useSettings'
 
 export default function Home() {
-  return (
+  const theme = useTheme();
+  const { settings } = useSettings();
+
+  console.log('theme', theme, 'settings', settings);
+  
+return (
     <>
       <Head>
         <title>Lập trình thật dễ</title>
@@ -11,6 +18,7 @@ export default function Home() {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <h1>Hello world! There</h1>
+      <Typography variant='h5'> This is Material UI component </Typography>
     </>
   )
 }
