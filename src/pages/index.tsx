@@ -6,7 +6,6 @@ import { useSettings } from 'src/hooks/useSettings'
 export default function Home() {
   const theme = useTheme();
   const { settings } = useSettings();  
-
 return (
     <>
       <Head>
@@ -15,7 +14,6 @@ return (
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <h1>Hello world! There</h1>
       <Typography variant='h5'> This is Material UI component </Typography>
     </>
   )
