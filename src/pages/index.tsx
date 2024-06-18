@@ -6,6 +6,7 @@ import { useSettings } from 'src/hooks/useSettings'
 export default function Home() {
   const theme = useTheme();
   const { settings } = useSettings();  
+
 return (
     <>
       <Head>
