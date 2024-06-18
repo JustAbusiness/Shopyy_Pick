@@ -5,10 +5,8 @@ import { useSettings } from 'src/hooks/useSettings'
 
 export default function Home() {
   const theme = useTheme();
-  const { settings } = useSettings();
+  const { settings } = useSettings();  
 
-  console.log('theme', theme, 'settings', settings);
-  
 return (
     <>
       <Head>
