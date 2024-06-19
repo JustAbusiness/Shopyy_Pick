@@ -41,6 +41,7 @@ type TProps = {}
 const LoginPage: NextPage<TProps> = () => {
   const [showPassword, setShowPassword] = React.useState<boolean>(false)
   const [isRemember, setIsRemember] = React.useState<boolean>(true)
+
   // ** Hooks
   const {login} = useAuth()
 
