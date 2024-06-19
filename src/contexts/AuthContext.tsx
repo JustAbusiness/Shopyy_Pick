@@ -12,6 +12,7 @@ import authConfig from 'src/configs/auth'
 
 // ** Types
 import { AuthValuesType, LoginParams, ErrCallbackType, UserDataType } from './types'
+import { loginAuth } from 'src/services/auth'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -72,14 +73,13 @@ const AuthProvider = ({ children }: Props) => {
   }, [])
 
   const handleLogin = (params: LoginParams, errorCallback?: ErrCallbackType) => {
-    axios
-      .post(authConfig.loginEndpoint, params)
+    loginAuth({ email: params.email, password: params.password })
       .then(async response => {
         params.rememberMe
-          ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.accessToken)
+          ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.access_token)
           : null
         const returnUrl = router.query.returnUrl
-
+        console.log("response", {response})
         setUser({ ...response.data.userData })
         params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(response.data.userData)) : null
 
