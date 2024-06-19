@@ -21,6 +21,7 @@ import LoginDark from '/public/images/login-dark.png'
 import LoginLight from '/public/images/login-light.png'
 import GoogleSvg from '/public/svgs/google.svg'
 import FacebookSvg from '/public/svgs/facebook.svg'
+import { useAuth } from 'src/hooks/useAuth'
 
 function Copyright(props: any) {
   return (
@@ -39,7 +40,12 @@ type TProps = {}
 
 const LoginPage: NextPage<TProps> = () => {
   const [showPassword, setShowPassword] = React.useState<boolean>(false)
-  const [isRemember, setIsRemember] = React.useState<boolean>(false)
+  const [isRemember, setIsRemember] = React.useState<boolean>(true)
+
+  // ** Hooks
+  const {login} = useAuth()
+
+ // ** Theme   
   const theme = useTheme()
   const schema = yup.object().shape({
     email: yup.string().required('Email is required').matches(EMAIL_REG, 'Email is not valid'),
@@ -63,6 +69,9 @@ const LoginPage: NextPage<TProps> = () => {
   })
 
   const onSubmit = (data: { email: string; password: string }) => {
+    if (!Object.keys(errors)?.length) {
+        login({...data, rememberMe: isRemember}) 
+    }
     console.log('data', data, errors)
   }
 
