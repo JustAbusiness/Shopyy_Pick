@@ -69,7 +69,8 @@ const LoginPage: NextPage<TProps> = () => {
   const onSubmit = (data: { email: string; password: string }) => {
     console.log('data', data, errors)
   }
-  return (
+  
+return (
     <Box
       sx={{
         height: '100vh',
