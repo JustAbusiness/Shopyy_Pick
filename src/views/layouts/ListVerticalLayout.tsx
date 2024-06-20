@@ -1,22 +1,60 @@
-import * as React from 'react'
+import React, { useState } from 'react'
 import { NextPage } from 'next'
 import List from '@mui/material/List'
-import { IconButton, ListItemButton, ListItemIcon, ListItemText, ListSubheader } from '@mui/material'
+import { ListItemButton, ListItemIcon, ListItemText, ListSubheader } from '@mui/material'
 import { VerticalItems } from 'src/configs/layout'
 import SendIcon from '@mui/icons-material/Send'
 import Collapse from '@mui/material/Collapse'
-import InboxIcon from '@mui/icons-material/MoveToInbox'
-import DraftsIcon from '@mui/icons-material/Drafts'
-import ExpandLess from '@mui/icons-material/ExpandLess'
-import ExpandMore from '@mui/icons-material/ExpandMore'
-import StarBorder from '@mui/icons-material/StarBorder'
 
 type TProps = {
   openStatus: boolean
   handleClick: () => void
 }
 
-const ListVerticalLayout: NextPage<TProps> = ({ openStatus, handleClick }) => {
+const RecursiveListItems = ({ items, level }: { items: any; level: number }) => {
+  const [openStatus, setOpenStatus] = useState<{ [key: string]: boolean }>({})
+  const handleClick = (title: string) => {
+    setOpenStatus(prev => ({
+      ...prev,
+      [title]: !prev[title]
+    }))
+  }
+
+  return (
+    <>
+      {items?.map((item: any) => {
+        return (
+          <React.Fragment key={item.title}>
+            <ListItemButton
+              sx={{
+                padding: `8px 10px`,
+                paddingLeft: `${level * 20}px`
+              }}
+              onClick={() => {
+                if (item.children) {
+                  handleClick(item.title)
+                }
+              }}
+            >
+              <ListItemIcon>
+                <SendIcon />
+              </ListItemIcon>
+              <ListItemText primary={item.title} />
+            </ListItemButton>
+            {item.children && item.children.length > 0 && (
+              <>
+                <Collapse key={item.title} in={openStatus[item.title]} timeout='auto' unmountOnExit>
+                  <RecursiveListItems items={item.children} level={level + 1} />
+                </Collapse>
+              </>
+            )}
+          </React.Fragment>
+        )
+      })}
+    </>
+  )
+}
+const ListVerticalLayout: NextPage<TProps> = () => {
   return (
     <List
       sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
@@ -28,42 +66,7 @@ const ListVerticalLayout: NextPage<TProps> = ({ openStatus, handleClick }) => {
         </ListSubheader>
       }
     >
-      {VerticalItems?.map(item => {
-        return (
-          <React.Fragment key={item.title}>
-            <ListItemButton
-              onClick={() => {
-                if (item.children) {
-                  handleClick()
-                }
-              }}
-            >
-              <ListItemIcon>
-                <SendIcon />
-              </ListItemIcon>
-              <ListItemText primary={item.title} />
-            </ListItemButton>
-            {item.children && item.children.length > 0 && (
-              <>
-                {item.children.map(child => {
-                  return (
-                    <Collapse key={child.title} in={openStatus} timeout='auto' unmountOnExit>
-                      <List component='div' disablePadding>
-                        <ListItemButton sx={{ pl: 4 }}>
-                          <ListItemIcon>
-                            <StarBorder />
-                          </ListItemIcon>
-                          <ListItemText primary={child.title} />
-                        </ListItemButton>
-                      </List>
-                    </Collapse>
-                  )
-                })}
-              </>
-            )}
-          </React.Fragment>
-        )
-      })}
+      <RecursiveListItems items={VerticalItems} level={1} />
     </List>
   )
 }

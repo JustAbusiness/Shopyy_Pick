@@ -5,6 +5,8 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import { NextPage } from 'next'
+import MenuIcon from '@mui/icons-material/Menu'
+import NotificationsIcon from '@mui/icons-material/Notifications'
 
 const drawerWidth: number = 240
 
@@ -53,13 +55,13 @@ const VerticalLayout: NextPage<TProps> = ({ open, toggleDrawer }) => {
             ...(open && { display: 'none' })
           }}
         >
-          {/* <Icon icon="ic:sharp-menu" /> */}
+          <MenuIcon />
         </IconButton>
         <Typography component='h1' variant='h6' color='inherit' noWrap sx={{ flexGrow: 1 }}>
           Dashboard
         </Typography>
         <IconButton color='inherit'>
-          {/* <Icon icon="ion:notifications" /> */}
+          <NotificationsIcon />
         </IconButton>
       </Toolbar>
     </AppBar>

@@ -6,6 +6,8 @@ import Divider from '@mui/material/Divider'
 import { NextPage } from 'next'
 import { IconButton } from '@mui/material'
 import ListVerticalLayout from './ListVerticalLayout'
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 const drawerWidth: number = 240
 
@@ -30,7 +32,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: prop => prop !== 'open' })
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen
       }),
-      width: theme.spacing(7),
+      width: theme.spacing(9),
       [theme.breakpoints.up('sm')]: {
         width: theme.spacing(9)
       }
@@ -44,8 +46,8 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer }) => {
   const handleClick = () => {
     setOpenStatus(!openStatus)
   }
-  
-return (
+
+  return (
     <Drawer variant='permanent' open={open}>
       <Toolbar
         sx={{
@@ -55,7 +57,9 @@ return (
           px: [1]
         }}
       >
-        <IconButton onClick={toggleDrawer}>{/* <ChevronLeftIcon /> */}</IconButton>
+        <IconButton onClick={toggleDrawer}>
+          {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+        </IconButton>
       </Toolbar>
       <Divider />
       <ListVerticalLayout openStatus={openStatus} handleClick={handleClick} />
