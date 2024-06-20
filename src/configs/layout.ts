@@ -18,5 +18,17 @@ export const VerticalItems = [
   {
     title: 'Country',
     path: '/country',
+    children: [
+      {
+        title: "Country 1",
+        path: '/',
+        children:[
+          {
+            title: "Country 1.2",
+            path: "/",
+          }
+        ]
+      }
+    ]
   }
 ]
