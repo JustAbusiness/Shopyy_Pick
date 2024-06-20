@@ -6,10 +6,6 @@ import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import { NextPage } from 'next'
 
-// import { Icon } from '@iconify/react'
-import Icon from '@mui/material/Icon';
-
-
 const drawerWidth: number = 240
 
 interface AppBarProps extends MuiAppBarProps {

@@ -2,19 +2,17 @@ import * as React from 'react'
 import { styled } from '@mui/material/styles'
 import MuiDrawer from '@mui/material/Drawer'
 import Toolbar from '@mui/material/Toolbar'
-import List from '@mui/material/List'
 import Divider from '@mui/material/Divider'
-import { mainListItems, secondaryListItems } from './ListItems'
 import { NextPage } from 'next'
 import { IconButton } from '@mui/material'
+import ListVerticalLayout from './ListVerticalLayout'
 
 const drawerWidth: number = 240
 
 type TProps = {
-  open: boolean,
+  open: boolean
   toggleDrawer: () => void
 }
-
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: prop => prop !== 'open' })(({ theme, open }) => ({
   '& .MuiDrawer-paper': {
@@ -41,27 +39,27 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: prop => prop !== 'open' })
 }))
 
 const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer }) => {
-  return (
-      <Drawer variant='permanent' open={open}>
-        <Toolbar
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'flex-end',
-            px: [1]
-          }}
-        >
-          <IconButton onClick={toggleDrawer}>
-              {/* <ChevronLeftIcon /> */}
-            </IconButton>
-        </Toolbar>
-        <Divider />
-        <List component='nav'>
-          {mainListItems}
-          <Divider sx={{ my: 1 }} />
-          {secondaryListItems}
-        </List>
-      </Drawer>
+  const [openStatus, setOpenStatus] = React.useState(true)
+
+  const handleClick = () => {
+    setOpenStatus(!openStatus)
+  }
+  
+return (
+    <Drawer variant='permanent' open={open}>
+      <Toolbar
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          px: [1]
+        }}
+      >
+        <IconButton onClick={toggleDrawer}>{/* <ChevronLeftIcon /> */}</IconButton>
+      </Toolbar>
+      <Divider />
+      <ListVerticalLayout openStatus={openStatus} handleClick={handleClick} />
+    </Drawer>
   )
 }
 
