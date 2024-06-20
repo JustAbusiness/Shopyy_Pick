@@ -32,9 +32,9 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: prop => prop !== 'open' })
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen
       }),
-      width: theme.spacing(9),
+      width: theme.spacing(12),
       [theme.breakpoints.up('sm')]: {
-        width: theme.spacing(9)
+        width: theme.spacing(10)
       }
     })
   }
@@ -62,7 +62,7 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer }) => {
         </IconButton>
       </Toolbar>
       <Divider />
-      <ListVerticalLayout openStatus={openStatus} handleClick={handleClick} />
+      <ListVerticalLayout open={openStatus} />
     </Drawer>
   )
 }
