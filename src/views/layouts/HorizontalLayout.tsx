@@ -44,7 +44,8 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer }) => {
   const handleClick = () => {
     setOpenStatus(!openStatus)
   }
-  return (
+  
+return (
     <Drawer variant='permanent' open={open}>
       <Toolbar
         sx={{

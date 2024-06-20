@@ -10,6 +10,7 @@ import DraftsIcon from '@mui/icons-material/Drafts'
 import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
 import StarBorder from '@mui/icons-material/StarBorder'
+
 type TProps = {
   openStatus: boolean
   handleClick: () => void
@@ -46,7 +47,7 @@ const ListVerticalLayout: NextPage<TProps> = ({ openStatus, handleClick }) => {
               <>
                 {item.children.map(child => {
                   return (
-                    <Collapse in={openStatus} timeout='auto' unmountOnExit>
+                    <Collapse key={child.title} in={openStatus} timeout='auto' unmountOnExit>
                       <List component='div' disablePadding>
                         <ListItemButton sx={{ pl: 4 }}>
                           <ListItemIcon>
