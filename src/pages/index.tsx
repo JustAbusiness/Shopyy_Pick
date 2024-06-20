@@ -2,6 +2,7 @@
 import { Box, TextField, useTheme } from '@mui/material'
 import Head from 'next/head'
 import { useSettings } from 'src/hooks/useSettings'
+import LayoutNotApp from 'src/views/layouts/LayoutNotApp'
 
 export default function Home() {
   const theme = useTheme()
@@ -15,7 +16,8 @@ export default function Home() {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-        
     </>
   )
 }
+
+Home.getLayout = (page: React.ReactNode) => <LayoutNotApp>{page}</LayoutNotApp>
