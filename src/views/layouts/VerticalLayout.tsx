@@ -8,6 +8,7 @@ import { NextPage } from 'next'
 import MenuIcon from '@mui/icons-material/Menu'
 import NotificationsIcon from '@mui/icons-material/Notifications'
 import { Badge } from '@mui/material'
+import UserDropdown from '../../components/user-dropdown/index'
 
 const drawerWidth: number = 240
 
@@ -71,7 +72,8 @@ return (
         <Typography component='h1' variant='h6' color='inherit' noWrap sx={{ flexGrow: 1 }}>
           Dashboard
         </Typography>
-        <IconButton color='inherit' sx={{ padding: '10px' }}>
+        <UserDropdown />
+        <IconButton color='inherit' sx={{ padding: '10px', marginLeft: '10px' }}>
           <Badge
             badgeContent={4}
             sx={{ color: theme.palette.mode === 'light' ? theme.palette.error.light : theme.palette.error.dark }}
