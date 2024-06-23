@@ -19,8 +19,8 @@ export const loginAuth = async (data: TLoginAuth) => {
 export const logoutAuth = async () => {
   try {
     const res = await axios.delete(`${CONFIG_API.AUTH.INDEX}/logout`)
-    
-return res.data
+
+    return res.data
   } catch (error) {
     return null
   }

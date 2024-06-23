@@ -1,5 +1,5 @@
 // ** React Imports
-import { ReactNode } from 'react'
+import { Children, ReactNode } from 'react'
 
 // ** Next Imports
 import Head from 'next/head'
@@ -37,6 +37,7 @@ import ReactHotToast from 'src/components/react-hot-toast'
 import { useSettings } from 'src/hooks/useSettings'
 import ThemeComponent from 'src/theme/ThemeComponent'
 import UserLayout from 'src/views/layouts/UserLayout'
+import { AxiosInterceptor } from 'src/helper/axios'
 
 type ExtendedAppProps = AppProps & {
   Component: NextPage
@@ -115,6 +116,7 @@ export default function App(props: ExtendedAppProps) {
       </Head>
 
       <AuthProvider>
+        <AxiosInterceptor>
         <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
           <SettingsConsumer>
             {({ settings }) => {
@@ -133,6 +135,7 @@ export default function App(props: ExtendedAppProps) {
             }}
           </SettingsConsumer>
         </SettingsProvider>
+        </AxiosInterceptor>
       </AuthProvider>
     </Provider>
   )
