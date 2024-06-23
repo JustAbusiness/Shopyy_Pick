@@ -8,7 +8,8 @@ import { NextPage } from 'next'
 import MenuIcon from '@mui/icons-material/Menu'
 import NotificationsIcon from '@mui/icons-material/Notifications'
 import { Badge } from '@mui/material'
-import UserDropdown from '../../components/user-dropdown/index'
+import UserDropdown from './components/user-dropdown/index'
+import ModeToggle from './components/mode-toggle'
 
 const drawerWidth: number = 240
 
@@ -45,8 +46,8 @@ const AppBar = styled(MuiAppBar, {
 
 const VerticalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHidden }) => {
   const theme = useTheme()
-  
-return (
+
+  return (
     <AppBar position='absolute' open={open}>
       <Toolbar
         sx={{
@@ -72,7 +73,8 @@ return (
         <Typography component='h1' variant='h6' color='inherit' noWrap sx={{ flexGrow: 1 }}>
           Dashboard
         </Typography>
-        <UserDropdown />
+        <UserDropdown  />
+        <ModeToggle  />
         <IconButton color='inherit' sx={{ padding: '10px', marginLeft: '10px' }}>
           <Badge
             badgeContent={4}
