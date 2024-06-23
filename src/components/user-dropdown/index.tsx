@@ -26,7 +26,8 @@ const UserDropdown = (props: TProps) => {
   const handleClose = () => {
     setAnchorEl(null)
   }
-  return (
+  
+return (
     <React.Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
         <Tooltip title='Account settings'>
