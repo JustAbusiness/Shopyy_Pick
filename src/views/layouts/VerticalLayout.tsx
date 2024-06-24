@@ -10,6 +10,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications'
 import { Badge } from '@mui/material'
 import UserDropdown from './components/user-dropdown/index'
 import ModeToggle from './components/mode-toggle'
+import LanguageDropdown from './components/language-dropdown'
 
 const drawerWidth: number = 240
 
@@ -74,6 +75,7 @@ const VerticalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHidden }) => {
           Dashboard
         </Typography>
         <UserDropdown  />
+        <LanguageDropdown />
         <ModeToggle  />
         <IconButton color='inherit' sx={{ padding: '10px', marginLeft: '10px' }}>
           <Badge
