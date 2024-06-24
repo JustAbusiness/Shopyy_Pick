@@ -7,10 +7,16 @@ import IconButton from '@mui/material/IconButton'
 import { NextPage } from 'next'
 import MenuIcon from '@mui/icons-material/Menu'
 import NotificationsIcon from '@mui/icons-material/Notifications'
-import { Badge } from '@mui/material'
+import { Badge, Button } from '@mui/material'
 import UserDropdown from './components/user-dropdown/index'
 import ModeToggle from './components/mode-toggle'
 import LanguageDropdown from './components/language-dropdown'
+
+// ** Hooks
+import { useAuth } from 'src/hooks/useAuth'
+import { useRouter } from 'next/router'
+import { ROUTE_CONFIG } from 'src/configs/route'
+
 
 const drawerWidth: number = 240
 
@@ -47,8 +53,10 @@ const AppBar = styled(MuiAppBar, {
 
 const VerticalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHidden }) => {
   const theme = useTheme()
-
-  return (
+  const { user } = useAuth()
+  const router = useRouter()
+  
+return (
     <AppBar position='absolute' open={open}>
       <Toolbar
         sx={{
@@ -74,17 +82,27 @@ const VerticalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHidden }) => {
         <Typography component='h1' variant='h6' color='inherit' noWrap sx={{ flexGrow: 1 }}>
           Dashboard
         </Typography>
-        <UserDropdown  />
+        {user ? (
+          <UserDropdown />
+        ) : (
+          <Button type='submit' variant='contained' sx={{ mt: 5, mb: 2 }} onClick={() => router.push(`/${ROUTE_CONFIG.LOGIN}`)}>
+            Log In
+          </Button>
+        )}
         <LanguageDropdown />
-        <ModeToggle  />
-        <IconButton color='inherit' sx={{ padding: '10px', marginLeft: '10px' }}>
-          <Badge
-            badgeContent={4}
-            sx={{ color: theme.palette.mode === 'light' ? theme.palette.error.light : theme.palette.error.dark }}
-          >
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
+        <ModeToggle />
+        {user ? (
+          <IconButton color='inherit' sx={{ padding: '10px', marginLeft: '10px' }}>
+            <Badge
+              badgeContent={4}
+              sx={{ color: theme.palette.mode === 'light' ? theme.palette.error.light : theme.palette.error.dark }}
+            >
+              <NotificationsIcon />
+            </Badge>
+          </IconButton>
+        ) : (
+          ''
+        )}
       </Toolbar>
     </AppBar>
   )
