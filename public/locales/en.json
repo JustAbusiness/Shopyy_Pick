@@ -1,4 +1,7 @@
 {
     "Account": "Account",
-    "Profile": "Profile"
+    "Profile": "Profile",
+    "Add another account": "Add another account",
+    "Settings": "Settings",
+    "Logout": "Logout"
 }

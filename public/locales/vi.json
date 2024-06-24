@@ -1,5 +1,8 @@
 {
   "Account": "Tài khoản",
   "Password": "Mật khẩu",
-  "Profile": "Hồ sơ"
+  "Profile": "Hồ sơ",
+  "Add another account": "Thêm tài khoản khác",
+  "Settings": "Cài đặt",
+  "Logout": "Đăng xuất"
 }

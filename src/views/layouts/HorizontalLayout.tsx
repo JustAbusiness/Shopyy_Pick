@@ -7,7 +7,9 @@ import { NextPage } from 'next'
 import { IconButton } from '@mui/material'
 import ListVerticalLayout from './ListVerticalLayout'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
+import Image from 'next/image'
+import Link from 'next/link'
 
 const drawerWidth: number = 240
 
@@ -57,9 +59,16 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer }) => {
           px: [1]
         }}
       >
-        <IconButton onClick={toggleDrawer}>
-          {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-        </IconButton>
+        <Link href={'/'}>
+          <Image
+            style={{ cursor: 'pointer', borderRadius: '50%', marginRight: '60px' }}
+            src='/images/huy2.jpeg'
+            alt='logo'
+            width={50}
+            height={50}
+          />
+        </Link>
+        <IconButton onClick={toggleDrawer}>{open ? <ChevronLeftIcon /> : <ChevronRightIcon />}</IconButton>
       </Toolbar>
       <Divider />
       <ListVerticalLayout open={openStatus} />
