@@ -1,5 +1,5 @@
 'use client'
-import { Box, TextField, useTheme } from '@mui/material'
+import { Box, useTheme } from '@mui/material'
 import Head from 'next/head'
 import { useSettings } from 'src/hooks/useSettings'
 import LayoutNotApp from 'src/views/layouts/LayoutNotApp'
@@ -21,3 +21,6 @@ export default function Home() {
 }
 
 Home.getLayout = (page: React.ReactNode) => <LayoutNotApp>{page}</LayoutNotApp>
+Home.guestGuard = false;
+Home.authGuard = false;
+

@@ -1,7 +1,8 @@
 import { NextPage } from 'next'
 import Head from 'next/head'
-import BlankLayout from 'src/views/layouts/BlankLayout'
-import RegisterPage from 'src/views/pages/register'
+import { ReactNode } from 'react'
+import LayoutNotApp from 'src/views/layouts/LayoutNotApp'
+import MyProfilePage from 'src/views/pages/my-profile'
 
 type TProps = {}
 
@@ -14,9 +15,10 @@ const MyProfile: NextPage<TProps> = () => {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <RegisterPage />
+      <MyProfilePage />
     </>
   )
 }
 
 export default MyProfile
+MyProfile.getLayout = (page:  ReactNode) => <LayoutNotApp>{page}</LayoutNotApp>
