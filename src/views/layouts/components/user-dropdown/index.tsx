@@ -13,6 +13,7 @@ import Logout from '@mui/icons-material/Logout'
 import FaceIcon from '@mui/icons-material/Face'
 import Image from 'next/image'
 import { useAuth } from 'src/hooks/useAuth'
+import { useTranslation } from 'react-i18next'
 
 type TProps = {}
 
@@ -20,6 +21,7 @@ const UserDropdown = (props: TProps) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const { user, logout } = useAuth()
+  const { t } = useTranslation();
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
@@ -30,7 +32,7 @@ const UserDropdown = (props: TProps) => {
 return (
     <React.Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-        <Tooltip title='Account settings'>
+        <Tooltip title={t('Account')}>
           <IconButton
             onClick={handleClick}
             size='small'
@@ -84,7 +86,7 @@ return (
           {user?.firstName} {user?.middleName} {user?.lastName} {user?.email}
         </MenuItem>
         <MenuItem onClick={handleClose}>
-          <Avatar /> Profile
+          <Avatar />  {t('Profile')}
         </MenuItem>
         <MenuItem onClick={handleClose}>
           <Avatar /> My account
