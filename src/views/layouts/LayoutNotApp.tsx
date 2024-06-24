@@ -15,8 +15,8 @@ type TProps = {
 const LayoutNotApp: NextPage<TProps> = ({ children }) => {
   const [open, setOpen] = React.useState(false)
   const theme = useTheme()
-  
-return (
+
+  return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <VerticalLayout open={open} toggleDrawer={() => {}} isHidden={true} />
@@ -38,6 +38,7 @@ return (
             width: 'calc(100vw - 32px)',
             maxWidth: 'unset !important',
             overflow: 'hidden',
+            padding: '5 !important',
             maxHeight: `calc(100vh - ${theme.mixins.toolbar.minHeight}px - 32px)`
           }}
         >
