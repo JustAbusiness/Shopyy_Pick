@@ -22,7 +22,8 @@ const GuestGuard = (props: GuestGuardProps) => {
     }
   }, [router.route])
 
-  if (authContext.loading) {
+  // Avoid loading page of login view if user is already logged in
+  if (authContext.loading || !authContext.loading && authContext.user !== null) {
     return <>{fallback}</>
   }
 

@@ -14,6 +14,8 @@ import FaceIcon from '@mui/icons-material/Face'
 import Image from 'next/image'
 import { useAuth } from 'src/hooks/useAuth'
 import { useTranslation } from 'react-i18next'
+import { useRouter } from 'next/router'
+import { ROUTE_CONFIG } from 'src/configs/route'
 
 type TProps = {}
 
@@ -21,15 +23,21 @@ const UserDropdown = (props: TProps) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const { user, logout } = useAuth()
-  const { t } = useTranslation();
+  const { t } = useTranslation()
+  const router = useRouter()
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
   const handleClose = () => {
     setAnchorEl(null)
   }
-  
-return (
+
+  const handleNavigateMyProfile = () => {
+    router.push(`/${ROUTE_CONFIG.MY_PROFILE}`)
+    handleClose()
+  }
+
+  return (
     <React.Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
         <Tooltip title={t('Account')}>
@@ -85,30 +93,27 @@ return (
         <MenuItem onClick={handleClose}>
           {user?.firstName} {user?.middleName} {user?.lastName} {user?.email}
         </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Avatar />  {t('Profile')}
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Avatar /> My account
+        <MenuItem onClick={handleNavigateMyProfile}>
+          <Avatar /> {t('Profile')}
         </MenuItem>
         <Divider />
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
             <PersonAdd fontSize='small' />
           </ListItemIcon>
-          Add another account
+          {t('Add another account')}
         </MenuItem>
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
             <Settings fontSize='small' />
           </ListItemIcon>
-          Settings
+          {t('Settings')}
         </MenuItem>
         <MenuItem onClick={logout}>
           <ListItemIcon>
             <Logout fontSize='small' />
           </ListItemIcon>
-          Logout
+          {t('Logout')}
         </MenuItem>
       </Menu>
     </React.Fragment>
