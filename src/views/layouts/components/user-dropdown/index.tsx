@@ -16,6 +16,8 @@ import { useAuth } from 'src/hooks/useAuth'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/router'
 import { ROUTE_CONFIG } from 'src/configs/route'
+import { Typography } from '@mui/material'
+import { toFullName } from 'src/utils'
 
 type TProps = {}
 
@@ -23,7 +25,7 @@ const UserDropdown = (props: TProps) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const { user, logout } = useAuth()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const router = useRouter()
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -52,6 +54,12 @@ const UserDropdown = (props: TProps) => {
             <Avatar sx={{ width: 32, height: 32 }}>
               {user?.avatar ? <Image src={user?.avatar || ' '} alt='avatar' width={32} height={32} /> : <FaceIcon />}
             </Avatar>
+            <Box>
+              <Typography>
+                {toFullName(user?.firstName || '', user?.middleName || ' ', user?.lastName || ' ', i18n.language)}
+              </Typography>
+              <Typography variant='caption'>{user?.role?.name}</Typography>
+            </Box>
           </IconButton>
         </Tooltip>
       </Box>
