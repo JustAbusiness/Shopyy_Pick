@@ -42,7 +42,8 @@ export const updateAuthMe = async (data: any) => {
   try {
     const res = await instanceAxios.put(`${CONFIG_API.AUTH.INDEX}/me`, data)
     console.log('res', res.data);
-    return res.data
+    
+return res.data
   } catch (error) {
     console.error(error);
     throw error;  
