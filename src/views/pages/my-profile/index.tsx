@@ -1,6 +1,6 @@
 'use client'
 import { NextPage } from 'next'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
@@ -9,11 +9,20 @@ import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { EMAIL_REG } from 'src/configs/regex'
-import { Avatar, useTheme } from '@mui/material'
+import { Avatar, IconButton, useTheme } from '@mui/material'
 import FaceIcon from '@mui/icons-material/Face'
-import Image from 'next/image'
-import { useAuth } from 'src/hooks/useAuth'
 import WrapperFileUpload from 'src/components/wrapper-file-upload'
+import { getAuthMe } from 'src/services/auth'
+import { UserDataType } from 'src/contexts/types'
+import { convertToBase64, toFullName } from 'src/utils'
+import { useTranslation } from 'react-i18next'
+import CustomIcon from 'src/components/Icon'
+import { useDispatch, useSelector } from 'react-redux'
+import { updateAuthMeAync } from 'src/stores/apps/auth/actions'
+import { AppDispatch, RootState } from 'src/stores'
+import toast from 'react-hot-toast'
+import { resetInitialState } from 'src/stores/apps/auth'
+import FallbackSpinner from 'src/components/fall-back'
 
 type TProps = {}
 
@@ -26,14 +35,31 @@ type TDefualtValues = {
   fullName: string
 }
 const MyProfilePage: NextPage<TProps> = () => {
-  const { user } = useAuth()
+  // ** State
+  const [loading, setLoading] = useState(true)
+  const [avatar, setAvatar] = useState('')
+  const [user, setUser] = useState<UserDataType | null>(null)
+  const [roleId, setRoleId] = useState('')
+
+  // ** Translate
+  const { i18n } = useTranslation()
+
+  // ** Theme
   const theme = useTheme()
+
+  // ** Dispatch Redux
+  const dispatch: AppDispatch = useDispatch()
+  const { isLoading, isErrorUpdateMe, isSuccessUpdateMe, messageUpdateMe } = useSelector(
+    (state: RootState) => state.auth
+  )
+
+  // ** React hook form
   const schema = yup.object().shape({
     email: yup.string().required('Email is required').matches(EMAIL_REG, 'Email is not valid'),
     role: yup.string().required('Role is required'),
     addresses: yup.string().required('Address is required'),
-    phoneNumber: yup.string().required('Phone Number is required'),
-    city: yup.string().required('City is required'),
+    phoneNumber: yup.string().min(8, 'Phone number is min 8 number'),
+    city: yup.string(),
     fullName: yup.string().required('Full Name is required')
   })
 
@@ -56,29 +82,67 @@ const MyProfilePage: NextPage<TProps> = () => {
     resolver: yupResolver(schema)
   })
 
-  const onSubmit = (data: any) => {
-    console.log('data', data, errors)
-  }
-
-  const handleUploadAvatar = (file: File) => {
-    console.log('file', file)
+  // Fetch auth me
+  const fecthAuthMe = async () => {
+    await getAuthMe()
+      .then(async response => {
+        setLoading(false)
+        const data = response?.data
+        if (data) {
+          setRoleId(data?.role?._id),
+            setAvatar(data?.avatar),
+            reset({
+              email: data?.email || '',
+              addresses: data?.addresses || '',
+              phoneNumber: data?.phoneNumber || '',
+              city: data?.city || '',
+              fullName: toFullName(data?.firstName, data?.middleName, data?.lastName, i18n.language),
+              role: data?.role?.name
+            })
+        }
+      })
+      .catch(() => {
+        setLoading(false)
+      })
   }
 
   useEffect(() => {
-    if (user) {
-      reset({
-        email: user?.email || '',
-        addresses: user?.addresses || '',
-        phoneNumber: user?.phoneNumber || '',
-        city: user?.city || '',
-        fullName: user?.fullName || '',
-        role: user?.role?.name
-      })
-    }
+    fecthAuthMe()
   }, [])
-  
-return (
+
+  useEffect(() => {
+    if (messageUpdateMe) {
+      if (isErrorUpdateMe) {
+        toast.error(messageUpdateMe)
+      } else if (isSuccessUpdateMe) {
+        toast.success(messageUpdateMe)
+        fecthAuthMe() // Fetch data about me after update success
+      }
+      dispatch(resetInitialState())
+    }
+  }, [isErrorUpdateMe, isSuccessUpdateMe, messageUpdateMe])
+
+  const onSubmit = (data: any) => {
+    dispatch(
+      updateAuthMeAync({
+        email: data.email,
+        firstName: data.fullName,
+        addresses: data.addresses,
+        avatar,
+        role: roleId,
+        phoneNumber: data.phoneNumber
+      })
+    )
+  }
+
+  const handleUploadAvatar = async (file: File) => {
+    const base64 = await convertToBase64(file)
+    setAvatar(base64 as string)
+  }
+
+  return (
     <>
+      {loading || (isLoading && <FallbackSpinner />)}
       <form onSubmit={handleSubmit(onSubmit)} autoComplete='off' noValidate>
         <Grid container>
           <Grid
@@ -100,22 +164,40 @@ return (
                       display: 'flex',
                       alignItems: 'cneter',
                       flexDirection: 'column',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      gap: 2
                     }}
                   >
-                    <Avatar sx={{ width: 200, height: 200 }}>
-                      {user?.avatar ? (
-                        <Image src={user?.avatar || ' '} alt='avatar' width={200} height={200} />
-                      ) : (
-                        <FaceIcon sx={{ width: 200, height: 200 }} />
+                    <Box sx={{ position: 'relative' }}>
+                      {avatar && (
+                        <IconButton
+                          sx={{ position: 'absolute', right: '72%', top: 0, zIndex: 2 }}
+                          edge='start'
+                          color='inherit'
+                          onClick={() => setAvatar('')}
+                        >
+                          <CustomIcon
+                            icon='material-symbols-light:close'
+                            style={{ background: 'red', borderRadius: '10px' }}
+                          />
+                        </IconButton>
                       )}
-                    </Avatar>
+                      {avatar ? (
+                        <Avatar src={avatar} sx={{ width: 200, height: 200 }}>
+                          <CustomIcon icon='ph:user-thin' fontSize={70} />
+                        </Avatar>
+                      ) : (
+                        <Avatar sx={{ width: 200, height: 200 }}>
+                          <FaceIcon sx={{ width: 200, height: 200 }} />
+                        </Avatar>
+                      )}
+                    </Box>
                     <WrapperFileUpload
                       uploadFunc={handleUploadAvatar}
                       objectAcceptFile={{ 'image/jpeg': ['.jpg', '.jpeg'], 'image/png': ['.png'] }}
                     >
                       <Button variant='outlined' sx={{ width: '15%', m: 5, ml: '8%', cursor: 'pointer' }}>
-                        Upload
+                        {avatar ? 'Change' : 'Upload'}
                       </Button>
                     </WrapperFileUpload>
                   </Box>
@@ -131,6 +213,8 @@ return (
                       <CustomTextFields
                         required
                         fullWidth
+                        autoFocus
+                        disabled
                         onChange={onChange}
                         onBlur={onBlur}
                         value={value}
@@ -253,7 +337,15 @@ return (
                       <CustomTextFields
                         required
                         fullWidth
-                        onChange={onChange}
+                        onChange={e => {
+                          const numValue = e.target.value.replace(/\D/g, '')
+                          onChange(numValue)
+                        }}
+                        inputProps={{
+                          inputMode: 'numeric',
+                          pattern: '[0-9]*',
+                          minLength: 8
+                        }}
                         onBlur={onBlur}
                         value={value}
                         error={Boolean(errors?.phoneNumber)}
