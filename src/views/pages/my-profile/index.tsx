@@ -100,10 +100,8 @@ const MyProfilePage: NextPage<TProps> = () => {
               role: data?.role?.name
             })
         }
-        // setUser({ ...response.data })
       })
       .catch(() => {
-        // setUser(null)
         setLoading(false)
       })
   }
