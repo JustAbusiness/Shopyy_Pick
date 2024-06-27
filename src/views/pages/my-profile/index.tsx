@@ -14,7 +14,7 @@ import FaceIcon from '@mui/icons-material/Face'
 import WrapperFileUpload from 'src/components/wrapper-file-upload'
 import { getAuthMe } from 'src/services/auth'
 import { UserDataType } from 'src/contexts/types'
-import { convertToBase64, toFullName } from 'src/utils'
+import { convertToBase64, separationFullName, toFullName } from 'src/utils'
 import { useTranslation } from 'react-i18next'
 import CustomIcon from 'src/components/Icon'
 import { useDispatch, useSelector } from 'react-redux'
@@ -23,6 +23,7 @@ import { AppDispatch, RootState } from 'src/stores'
 import toast from 'react-hot-toast'
 import { resetInitialState } from 'src/stores/apps/auth'
 import FallbackSpinner from 'src/components/fall-back'
+import { set } from 'nprogress'
 
 type TProps = {}
 
@@ -84,6 +85,7 @@ const MyProfilePage: NextPage<TProps> = () => {
 
   // Fetch auth me
   const fecthAuthMe = async () => {
+    setLoading(true)
     await getAuthMe()
       .then(async response => {
         setLoading(false)
@@ -108,7 +110,7 @@ const MyProfilePage: NextPage<TProps> = () => {
 
   useEffect(() => {
     fecthAuthMe()
-  }, [])
+  }, [i18n.language])        // When switch language, will translate to language specific name. ex: name
 
   useEffect(() => {
     if (messageUpdateMe) {
@@ -123,10 +125,13 @@ const MyProfilePage: NextPage<TProps> = () => {
   }, [isErrorUpdateMe, isSuccessUpdateMe, messageUpdateMe])
 
   const onSubmit = (data: any) => {
+    const { firstName, lastName, middleName } = separationFullName(data.fullName, i18n.language)
     dispatch(
       updateAuthMeAync({
         email: data.email,
-        firstName: data.fullName,
+        firstName: firstName,
+        middleName: middleName,
+        lastName: lastName,
         addresses: data.addresses,
         avatar,
         role: roleId,
