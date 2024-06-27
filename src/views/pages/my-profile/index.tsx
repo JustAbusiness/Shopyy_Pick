@@ -21,7 +21,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { updateAuthMeAync } from 'src/stores/apps/auth/actions'
 import { AppDispatch, RootState } from 'src/stores'
 import toast from 'react-hot-toast'
-import { useRouter } from 'next/router'
 import { resetInitialState } from 'src/stores/apps/auth'
 import FallbackSpinner from 'src/components/fall-back'
 
@@ -38,7 +37,7 @@ type TDefualtValues = {
 const MyProfilePage: NextPage<TProps> = () => {
   // ** State
   const [loading, setLoading] = useState(true)
-  const [avatar,  setAvatar] = useState('')
+  const [avatar, setAvatar] = useState('')
   const [user, setUser] = useState<UserDataType | null>(null)
   const [roleId, setRoleId] = useState('')
 
@@ -91,15 +90,15 @@ const MyProfilePage: NextPage<TProps> = () => {
         const data = response?.data
         if (data) {
           setRoleId(data?.role?._id),
-          setAvatar(data?.avatar),
-          reset({
-            email: data?.email || '',
-            addresses: data?.addresses || '',
-            phoneNumber: data?.phoneNumber || '',
-            city: data?.city || '',
-            fullName: toFullName(data?.firstName, data?.middleName, data?.lastName, i18n.language),
-            role: data?.role?.name
-          })
+            setAvatar(data?.avatar),
+            reset({
+              email: data?.email || '',
+              addresses: data?.addresses || '',
+              phoneNumber: data?.phoneNumber || '',
+              city: data?.city || '',
+              fullName: toFullName(data?.firstName, data?.middleName, data?.lastName, i18n.language),
+              role: data?.role?.name
+            })
         }
         // setUser({ ...response.data })
       })
@@ -119,22 +118,23 @@ const MyProfilePage: NextPage<TProps> = () => {
         toast.error(messageUpdateMe)
       } else if (isSuccessUpdateMe) {
         toast.success(messageUpdateMe)
-        fecthAuthMe()     // Fetch data about me after update success
+        fecthAuthMe() // Fetch data about me after update success
       }
       dispatch(resetInitialState())
     }
   }, [isErrorUpdateMe, isSuccessUpdateMe, messageUpdateMe])
 
-
   const onSubmit = (data: any) => {
-    dispatch(updateAuthMeAync({
-      email: data.email,
-      firstName: data.fullName,
-      addresses: data.addresses,
-      avatar,  
-      role: roleId,
-      phoneNumber: data.phoneNumber,      
-     }))
+    dispatch(
+      updateAuthMeAync({
+        email: data.email,
+        firstName: data.fullName,
+        addresses: data.addresses,
+        avatar,
+        role: roleId,
+        phoneNumber: data.phoneNumber
+      })
+    )
   }
 
   const handleUploadAvatar = async (file: File) => {
@@ -142,7 +142,6 @@ const MyProfilePage: NextPage<TProps> = () => {
     setAvatar(base64 as string)
   }
 
-  
   return (
     <>
       {loading || (isLoading && <FallbackSpinner />)}
