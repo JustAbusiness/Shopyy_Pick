@@ -22,8 +22,7 @@ import { updateAuthMeAync } from 'src/stores/apps/auth/actions'
 import { AppDispatch, RootState } from 'src/stores'
 import toast from 'react-hot-toast'
 import { resetInitialState } from 'src/stores/apps/auth'
-import FallbackSpinner from 'src/components/fall-back'
-import { set } from 'nprogress'
+import Spinner from 'src/components/spinner'
 
 type TProps = {}
 
@@ -147,7 +146,7 @@ const MyProfilePage: NextPage<TProps> = () => {
 
   return (
     <>
-      {loading || (isLoading && <FallbackSpinner />)}
+      {loading || (isLoading && <Spinner />)}
       <form onSubmit={handleSubmit(onSubmit)} autoComplete='off' noValidate>
         <Grid container>
           <Grid
