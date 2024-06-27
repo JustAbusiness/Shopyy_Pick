@@ -1,9 +1,9 @@
 // ** Redux Imports
 import { Dispatch } from 'redux'
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 
 // ** Axios Imports
-import { registerAuthAync, updateAuthMeAync } from './actions'
+import { changePasswordMeAync, registerAuthAync, updateAuthMeAync } from './actions'
 
 interface DataParams {
   q: string
@@ -25,7 +25,10 @@ const initialState = {
   isError: false,
   message: '',
   messageUpdateMe: '',
-  typeError: ''
+  typeError: '',
+  isSuccessChangePassword: true,
+  isErrorChangePassword: false,
+  messageChangePassword: ''
 }
 
 export const authSlice = createSlice({
@@ -41,6 +44,9 @@ export const authSlice = createSlice({
       state.isSuccessUpdateMe = false
       state.isErrorUpdateMe = true
       state.messageUpdateMe = ''
+      state.isSuccessChangePassword = false
+      state.isErrorChangePassword = true
+      state.messageChangePassword = ''
     }
   },
   extraReducers: builder => {
@@ -49,7 +55,6 @@ export const authSlice = createSlice({
       state.isLoading = true
     })
     builder.addCase(registerAuthAync.fulfilled, (state, action) => {
-      console.log('action', { action })
       state.isLoading = false
       state.isSuccess = !!action.payload?.data?.email
       state.isError = !action.payload?.data?.email
@@ -69,7 +74,6 @@ export const authSlice = createSlice({
       state.isLoading = true
     })
     builder.addCase(updateAuthMeAync.fulfilled, (state, action) => {
-      console.log('action', { action })
       state.isLoading = false
       state.isSuccessUpdateMe = !!action.payload?.data?.email
       state.isErrorUpdateMe = !action.payload?.data?.email
@@ -81,6 +85,25 @@ export const authSlice = createSlice({
       state.isSuccessUpdateMe = false
       state.isErrorUpdateMe = false
       state.messageUpdateMe = ''
+      state.typeError = ''
+    })
+
+    // ** Change Password
+    builder.addCase(changePasswordMeAync.pending, (state, action) => {
+      state.isLoading = true
+    })
+    builder.addCase(changePasswordMeAync.fulfilled, (state, action) => {
+      state.isLoading = false
+      state.isSuccessChangePassword = !!action.payload?.data
+      state.isErrorChangePassword = !action.payload?.data
+      state.messageChangePassword = action.payload?.message
+      state.typeError = action.payload?.typeError
+    })
+    builder.addCase(changePasswordMeAync.rejected, (state, action) => {
+      state.isLoading = false
+      state.isSuccessChangePassword = false
+      state.isErrorChangePassword = false
+      state.messageChangePassword = ''
       state.typeError = ''
     })
   }

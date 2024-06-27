@@ -22,6 +22,8 @@ import LoginLight from '/public/images/login-light.png'
 import GoogleSvg from '/public/svgs/google.svg'
 import FacebookSvg from '/public/svgs/facebook.svg'
 import { useAuth } from 'src/hooks/useAuth'
+import toast from 'react-hot-toast'
+import { t } from 'i18next'
 
 function Copyright(props: any) {
   return (
@@ -58,7 +60,8 @@ const LoginPage: NextPage<TProps> = () => {
   const {
     handleSubmit,
     control,
-    formState: { errors }
+    formState: { errors },
+    setError
   } = useForm({
     defaultValues: {
       email: 'admin@gmail.com',
@@ -70,7 +73,12 @@ const LoginPage: NextPage<TProps> = () => {
 
   const onSubmit = (data: { email: string; password: string }) => {
     if (!Object.keys(errors)?.length) {
-        login({...data, rememberMe: isRemember}) 
+        login({...data, rememberMe: isRemember}, (err) => {
+          console.log('err', err);
+          if (err?.response?.data?.typeError === 'INVALID') {
+            toast.error(t("the_email_or_password_is_incorrect"))
+          }
+        }) 
     }
     console.log('data', data, errors)
   }

@@ -4,5 +4,9 @@
   "Profile": "Hồ sơ",
   "Add another account": "Thêm tài khoản khác",
   "Settings": "Cài đặt",
-  "Logout": "Đăng xuất"
+  "Logout": "Đăng xuất",
+  "Change_password": "Đổi mật khẩu",
+  "the_email_or_password_is_incorrect": "Email hoặc mật khẩu không chính xác",
+  "Login Success": "Đăng nhập thành công",
+  "Logout Success": "Đăng xuất thành công"
 }
