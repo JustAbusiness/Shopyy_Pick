@@ -2,7 +2,7 @@
 import { useRouter } from 'next/router'
 import { ReactNode, ReactElement, useEffect } from 'react'
 import { ACCESS_TOKEN, USER_DATA } from 'src/configs/auth'
-import { clearLocalUserData } from 'src/helper/storage'
+import { clearLocalUserData, clearTemporaryToken, getTemporaryToken } from 'src/helper/storage'
 import { useAuth } from 'src/hooks/useAuth'
 
 interface AuthGuardProps {
@@ -17,11 +17,13 @@ const AuthGuard = (props: AuthGuardProps) => {
   const router = useRouter()
 
   useEffect(() => {
+    const { temporaryToken } = getTemporaryToken()
     if (!router.isReady) return
     if (
       authContext.user === null &&
       !window.localStorage.getItem(ACCESS_TOKEN) &&
-      !window.localStorage.getItem(USER_DATA)
+      !window.localStorage.getItem(USER_DATA) &&
+      !temporaryToken
     ) {
       if (router.asPath !== '/' && router.asPath !== '/login' && router.asPath !== '/register') {
         router.replace({
@@ -37,6 +39,19 @@ const AuthGuard = (props: AuthGuardProps) => {
       clearLocalUserData()
     }
   }, [router.route])
+
+  // Clear temporary token
+  useEffect(() => {
+    const handleUnload = () => {
+      clearTemporaryToken()
+    }
+
+    window.addEventListener('beforeunload', () => handleUnload())
+    
+return () => {
+      window.addEventListener('beforeunload', () => handleUnload())
+    }
+  }, [])
 
   // Not loading UI when user is not authenticated
   if (authContext.loading || authContext.user === null) {

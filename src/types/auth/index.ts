@@ -19,4 +19,9 @@ export type TUpdateAuthMe = {
     avatar: string
     city: string
     role: string
-}    
+}
+
+export type TChangePassword = {
+    currentPassword: string
+    newPassword: string
+}

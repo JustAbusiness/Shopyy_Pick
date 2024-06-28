@@ -1,6 +1,13 @@
 import axios from 'axios'
 import { BASE_URL, CONFIG_API } from 'src/configs/api'
-import { clearLocalUserData, getLocalUserData } from '../storage'
+import {
+  clearLocalUserData,
+  clearTemporaryToken,
+  getLocalUserData,
+  getTemporaryToken,
+  setLocalUserData,
+  setTemporaryToken
+} from '../storage'
 import { jwtDecode } from 'jwt-decode'
 import { FC } from 'react'
 import { NextRouter, useRouter } from 'next/router'
@@ -22,20 +29,28 @@ const handleRedirectLogin = (router: NextRouter, setUser: (data: UserDataType | 
 
   setUser(null)
   clearLocalUserData()
+  clearTemporaryToken()
 }
 
 const AxiosInterceptor: FC<TAxiosInterceptor> = ({ children }) => {
   const router = useRouter()
-  const { accessToken, refreshToken } = getLocalUserData()
-  const { setUser } = useAuth()
+  const { setUser, user } = useAuth()
 
   instanceAxios.interceptors.request.use(async config => {
-    if (accessToken) {
-      const decodeAccessToken: any = jwtDecode(accessToken)
+    const { accessToken, refreshToken } = getLocalUserData() // Make sure always get new token
+    const { temporaryToken } = getTemporaryToken()
+
+    if (accessToken || temporaryToken) {
+      let decodeAccessToken: any = {}
+      if (accessToken) {
+        decodeAccessToken = jwtDecode(accessToken)
+      } else if (temporaryToken) {
+        decodeAccessToken = jwtDecode(temporaryToken)
+      }
 
       if (decodeAccessToken?.exp > Date.now() / 1000) {
         // check if token is expired
-        config.headers['Authorization'] = `Bearer ${accessToken}`
+        config.headers['Authorization'] = `Bearer ${accessToken ? accessToken : temporaryToken}`
       } else {
         if (refreshToken) {
           const decodeRefreshToken: any = jwtDecode(refreshToken)
@@ -54,6 +69,14 @@ const AxiosInterceptor: FC<TAxiosInterceptor> = ({ children }) => {
                 const newAccessToken = response.data?.data?.access_token
                 if (newAccessToken) {
                   config.headers['Authorization'] = `Bearer ${response.data.data.accessToken}`
+                  if (accessToken) {
+                    // When Remember Me is checked
+                    setLocalUserData(JSON.stringify(user), newAccessToken, refreshToken)
+                  } else {
+                    // When Remember Me is not checked
+                    setLocalUserData(JSON.stringify(user), '', refreshToken)
+                    setTemporaryToken(newAccessToken)
+                  }
                 } else {
                   handleRedirectLogin(router, setUser)
                 }
@@ -71,8 +94,8 @@ const AxiosInterceptor: FC<TAxiosInterceptor> = ({ children }) => {
     } else {
       handleRedirectLogin(router, setUser)
     }
-    
-return config
+
+    return config
   })
 
   instanceAxios.interceptors.response.use(response => {

@@ -14,8 +14,10 @@ import authConfig from 'src/configs/auth'
 import { AuthValuesType, LoginParams, ErrCallbackType, UserDataType } from './types'
 import { loginAuth, logoutAuth } from 'src/services/auth'
 import { CONFIG_API } from 'src/configs/api'
-import { clearLocalUserData, setLocalUserData } from 'src/helper/storage'
+import { clearLocalUserData, setLocalUserData, setTemporaryToken } from 'src/helper/storage'
 import instanceAxios from 'src/helper/axios'
+import toast from 'react-hot-toast'
+import { useTranslation } from 'react-i18next'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -37,6 +39,7 @@ const AuthProvider = ({ children }: Props) => {
   // ** States
   const [user, setUser] = useState<UserDataType | null>(defaultProvider.user)
   const [loading, setLoading] = useState<boolean>(defaultProvider.loading)
+  const { t } = useTranslation()
 
   // ** Hooks
   const router = useRouter()
@@ -72,13 +75,13 @@ const AuthProvider = ({ children }: Props) => {
   const handleLogin = (params: LoginParams, errorCallback?: ErrCallbackType) => {
     loginAuth({ email: params.email, password: params.password })
       .then(async response => {
-        params.rememberMe
-          ? setLocalUserData(
-              JSON.stringify(response.data.user),
-              response.data.access_token,
-              response.data.refresh_token
-            )
-          : null
+        if (params.rememberMe) {
+          setLocalUserData(JSON.stringify(response.data.user), response.data.access_token, response.data.refresh_token)
+        } else {
+          setTemporaryToken(response.data.access_token)
+        }
+        
+        toast.success(t('Login Success'))
         const returnUrl = router.query.returnUrl
         setUser({ ...response.data.user })
 
@@ -90,6 +93,7 @@ const AuthProvider = ({ children }: Props) => {
       })
 
       .catch(err => {
+        console.log(err)
         if (errorCallback) errorCallback(err)
       })
   }
@@ -99,6 +103,7 @@ const AuthProvider = ({ children }: Props) => {
       setUser(null)
       clearLocalUserData()
       router.push('/login')
+      toast.success(t('Logout Success'))
     })
   }
 

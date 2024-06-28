@@ -9,6 +9,7 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import PersonAdd from '@mui/icons-material/PersonAdd'
 import Settings from '@mui/icons-material/Settings'
+import PasswordIcon from '@mui/icons-material/Password'
 import Logout from '@mui/icons-material/Logout'
 import FaceIcon from '@mui/icons-material/Face'
 import Image from 'next/image'
@@ -39,7 +40,17 @@ const UserDropdown = (props: TProps) => {
     handleClose()
   }
 
-  return (
+  const handleNavigateChangePassword = () => {
+    router.push(`${ROUTE_CONFIG.CHANGE_PASSWORD}`)
+    handleClose()
+  }
+
+  const handleNavigatHomePage = () => {
+    router.push('/')
+    handleClose()
+  }
+  
+return (
     <React.Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
         <Tooltip title={t('Account')}>
@@ -105,7 +116,7 @@ const UserDropdown = (props: TProps) => {
           <Avatar /> {t('Profile')}
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleNavigatHomePage}>
           <ListItemIcon>
             <PersonAdd fontSize='small' />
           </ListItemIcon>
@@ -116,6 +127,12 @@ const UserDropdown = (props: TProps) => {
             <Settings fontSize='small' />
           </ListItemIcon>
           {t('Settings')}
+        </MenuItem>
+        <MenuItem onClick={handleNavigateChangePassword}>
+          <ListItemIcon>
+            <PasswordIcon fontSize='small' />
+          </ListItemIcon>
+          {t('Change_password')}
         </MenuItem>
         <MenuItem onClick={logout}>
           <ListItemIcon>
