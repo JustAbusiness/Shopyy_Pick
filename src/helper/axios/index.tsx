@@ -72,11 +72,7 @@ const AxiosInterceptor: FC<TAxiosInterceptor> = ({ children }) => {
                   if (accessToken) {
                     // When Remember Me is checked
                     setLocalUserData(JSON.stringify(user), newAccessToken, refreshToken)
-                  } else {
-                    // When Remember Me is not checked
-                    setLocalUserData(JSON.stringify(user), '', refreshToken)
-                    setTemporaryToken(newAccessToken)
-                  }
+                  } 
                 } else {
                   handleRedirectLogin(router, setUser)
                 }

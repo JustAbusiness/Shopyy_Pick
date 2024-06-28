@@ -9,7 +9,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { EMAIL_REG } from 'src/configs/regex'
-import { Avatar, IconButton, useTheme } from '@mui/material'
+import { Avatar, FormHelperText, IconButton, useTheme } from '@mui/material'
 import FaceIcon from '@mui/icons-material/Face'
 import WrapperFileUpload from 'src/components/wrapper-file-upload'
 import { getAuthMe } from 'src/services/auth'
@@ -23,6 +23,7 @@ import { AppDispatch, RootState } from 'src/stores'
 import toast from 'react-hot-toast'
 import { resetInitialState } from 'src/stores/apps/auth'
 import Spinner from 'src/components/spinner'
+import CustomeSelect from 'src/components/custom-select'
 
 type TProps = {}
 
@@ -109,7 +110,7 @@ const MyProfilePage: NextPage<TProps> = () => {
 
   useEffect(() => {
     fecthAuthMe()
-  }, [i18n.language])        // When switch language, will translate to language specific name. ex: name
+  }, [i18n.language]) // When switch language, will translate to language specific name. ex: name
 
   useEffect(() => {
     if (messageUpdateMe) {
@@ -238,17 +239,14 @@ const MyProfilePage: NextPage<TProps> = () => {
                       required: true
                     }}
                     render={({ field: { onChange, onBlur, value } }) => (
-                      <CustomTextFields
-                        required
+                      <CustomeSelect
                         fullWidth
-                        disabled
-                        autoFocus
+                        options={[]}
                         onChange={onChange}
-                        onBlur={onBlur}
                         value={value}
+                        label='Chọn vai trò'
                         error={Boolean(errors?.role)}
-                        placeholder='Chọn vai trò'
-                        helperText={errors?.role?.message}
+                        
                       />
                     )}
                     name='role'
